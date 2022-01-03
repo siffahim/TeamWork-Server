@@ -22,6 +22,7 @@ async function run() {
 
         const database = client.db('StrategyTech')
         const courseCollection = database.collection('courses')
+        const userCollection = database.collection('users')
 
         app.get('/courses', async (req, res) => {
             const cursor = courseCollection.find({})
@@ -36,7 +37,26 @@ async function run() {
             res.json(result)
         })
 
+        //oparetion user
+        app.post('/users', async (req, res) => {
+            const data = req.body;
+            const result = await userCollection.insertOne(data)
+            res.json(result)
+            console.log('post hitted', req.body)
+        })
 
+        app.get('/users', async (req, res) => {
+            const query = req.query.email
+            const filter = { email: query }
+            let cursor;
+            if (query) {
+                cursor = userCollection.find(filter)
+            } else {
+                cursor = userCollection.find({})
+            }
+            const result = await cursor.toArray()
+            res.json(result)
+        })
     }
     finally {
         // await client.close()
