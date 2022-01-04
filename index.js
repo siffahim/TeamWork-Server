@@ -42,7 +42,6 @@ async function run() {
             const data = req.body;
             const result = await userCollection.insertOne(data)
             res.json(result)
-            console.log('post hitted', req.body)
         })
 
         app.get('/users', async (req, res) => {
@@ -57,6 +56,14 @@ async function run() {
             const result = await cursor.toArray()
             res.json(result)
         })
+
+        app.delete('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await userCollection.deleteOne(filter)
+            res.send(result)
+        })
+
     }
     finally {
         // await client.close()
